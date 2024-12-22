@@ -23,11 +23,12 @@ int main() {
     while (ss >> buf)
 	tokens.push_back(buf);	
 
-    if (tokens[0] == "exit")
+    if (tokens[0] == "exit") {
 	std::cout << tokens[1] << std::endl;
+        break;
+    }
     else
         std::cout << input + ": command not found\n";
-        break;
   }
  }
 
