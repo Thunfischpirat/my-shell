@@ -26,8 +26,17 @@ int main() {
     if (tokens[0] == "exit") {
         break;
     }
+    if (tokens[0] == "echo") {
+	int i { 1 };
+	buf = "";
+	while (i < tokens.size()) {
+	  buf += (tokens[i] + " ");
+          i++;
+        }
+        std::cout << buf << std::endl;
+    }
     else
-        std::cout << input + ": command not found\n";
+        std::cout << input + ": command not found" << std::endl;
   }
  }
 
