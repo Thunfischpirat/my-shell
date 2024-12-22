@@ -24,7 +24,6 @@ int main() {
 	tokens.push_back(buf);	
 
     if (tokens[0] == "exit") {
-	std::cout << tokens[1] << std::endl;
         break;
     }
     else
