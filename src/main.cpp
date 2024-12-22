@@ -1,4 +1,7 @@
 #include <iostream>
+#include <vector>
+#include <sstream>
+#include <string>
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -12,8 +15,19 @@ int main() {
     std::cout << "$ ";
 
     std::getline(std::cin, input);
+    std::string buf;
 
-    std::cout << input + ": command not found\n";
+    std::stringstream ss(input);
+    std::vector<std::string> tokens;
+
+    while (ss >> buf)
+	tokens.push_back(buf);	
+
+    if (tokens[0] == "exit")
+	std::cout << tokens[1] << std::endl;
+    else
+        std::cout << input + ": command not found\n";
+        break;
   }
  }
 
