@@ -48,7 +48,7 @@ int main() {
 	}
         while(std::getline(env_p, buf, ':')) {
 	   if (found)
-	      continue;
+	      break;
            if (!std::filesystem::exists(buf))
 	      continue;	
 	   for (auto &p : std::filesystem::directory_iterator(buf)) {
