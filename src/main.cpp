@@ -55,7 +55,7 @@ int main() {
 	      continue;	
 	   for (auto &p : std::filesystem::directory_iterator(buf)) {
 	      if (p.path().filename() == tokens[1]) {
-	          std::cout << tokens[1] << " is " << p.path() << std::endl;
+	          std::cout << tokens[1] << " is " << p.path().string() << std::endl;
 	          found = true;
 	          break;
 	      } 
