@@ -8,6 +8,8 @@ int main() {
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
 
+  std::vector<std::string> cmds {"exit", "echo", "type"};
+
   // Uncomment this block to pass the first stage
   std::string input;
   while (true)
@@ -24,9 +26,9 @@ int main() {
 	tokens.push_back(buf);	
 
     if (tokens[0] == "exit") {
-        break;
+        return 0;
     }
-    if (tokens[0] == "echo") {
+    else if (tokens[0] == "echo") {
 	int i { 1 };
 	buf = "";
 	while (i < tokens.size()) {
@@ -35,8 +37,20 @@ int main() {
         }
         std::cout << buf << std::endl;
     }
+    else if (tokens[0] == "type") {
+      bool found { false };
+      for (int i{ 0 }; i <= tokens.size(); i++) {
+	if (tokens[1] == cmds[i]) {
+           std::cout << tokens[1] << " is a shell builtin" << std::endl;
+	   found = true;
+	   break;
+        }
+      }
+      if (!found)	
+         std::cout << tokens[1] << ": not found" << std::endl;
+    }
     else
-        std::cout << input + ": command not found" << std::endl;
+       std::cout << input + ": command not found" << std::endl;
   }
  }
 
