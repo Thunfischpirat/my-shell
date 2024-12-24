@@ -67,7 +67,10 @@ int main() {
 	std::cout << cwd.string() << std::endl;
     }
     else if (tokens[0] == "cd") {
-	if (!std::filesystem::exists(tokens[1]))
+	if (tokens[1] == "~") {
+	   std::filesystem::current_path(std::getenv("HOME"));
+	}
+        else if (!std::filesystem::exists(tokens[1]))
            std::cout << "cd: " << tokens[1] << ": No such file or directory" << std::endl;
 	else 
 	   std::filesystem::current_path(tokens[1]);
