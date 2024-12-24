@@ -17,6 +17,7 @@ int main() {
   while (true) {
 
     std::stringstream env_p(std::getenv("PATH"));   
+    bool found { false };
 
     std::cout << "$ ";
 
@@ -40,7 +41,6 @@ int main() {
         std::cout << buf << std::endl;
     }
     else if (tokens[0] == "type") {
-        bool found { false };
         for (int i{ 0 }; i <= tokens.size(); i++) {
           if (tokens[1] == cmds[i]) {
              std::cout << tokens[1] << " is a shell builtin" << std::endl;
@@ -65,7 +65,19 @@ int main() {
            std::cout << tokens[1] << ": not found" << std::endl;
     }   
     else 
-       std::cout << input + ": command not found" << std::endl;
-  }
+       while(std::getline(env_p, buf, ':')) {
+	 if (!std::filesystem::exists(buf)) 
+	   continue;
+	 for (auto &p : std::filesystem::directory_iterator(buf)) {
+	   if (p.path().filename() == tokens[0]) {
+		std::system(input.c_str());
+		found = true;
+		break;
+	   }
+         }
+       }
+       if (!found)	
+          std::cout << input + ": command not found" << std::endl;
+    }
  }
 
