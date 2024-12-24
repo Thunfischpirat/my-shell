@@ -10,7 +10,7 @@ int main() {
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
 
-  std::vector<std::string> cmds {"exit", "echo", "type"};
+  std::vector<std::string> cmds {"exit", "echo", "type", "pwd"};
 
   // Uncomment this block to pass the first stage
   std::string input;
@@ -41,7 +41,7 @@ int main() {
         std::cout << buf << std::endl;
     }
     else if (tokens[0] == "type") {
-        for (int i{ 0 }; i <= tokens.size(); i++) {
+        for (int i{ 0 }; i < cmds.size(); i++) {
           if (tokens[1] == cmds[i]) {
              std::cout << tokens[1] << " is a shell builtin" << std::endl;
              found = true;
