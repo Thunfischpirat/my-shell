@@ -11,11 +11,13 @@ int main() {
   std::cerr << std::unitbuf;
 
   std::vector<std::string> cmds {"exit", "echo", "type"};
-  std::stringstream env_p(std::getenv("PATH"));   
 
   // Uncomment this block to pass the first stage
   std::string input;
   while (true) {
+
+    std::stringstream env_p(std::getenv("PATH"));   
+
     std::cout << "$ ";
 
     std::getline(std::cin, input);
