@@ -64,8 +64,14 @@ int main() {
         if (!found)	
            std::cout << tokens[1] << ": not found" << std::endl;
     }   
+    else if (tokens[0] == "pwd") {
+	std::filesystem::path cwd = std::filesystem::current_path();
+	std::cout << cwd.string() << std::endl;
+    }
     else {
        while(std::getline(env_p, buf, ':')) {
+	 if (found)
+            break;
 	 if (!std::filesystem::exists(buf)) 
 	   continue;
 	 for (auto &p : std::filesystem::directory_iterator(buf)) {
