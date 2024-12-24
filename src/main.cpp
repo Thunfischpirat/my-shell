@@ -6,13 +6,11 @@
 #include <string>
 
 int main() {
-  // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
 
-  std::vector<std::string> cmds {"exit", "echo", "type", "pwd"};
+  std::vector<std::string> cmds {"exit", "echo", "type", "pwd", "cd"};
 
-  // Uncomment this block to pass the first stage
   std::string input;
   while (true) {
 
@@ -67,6 +65,12 @@ int main() {
     else if (tokens[0] == "pwd") {
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::cout << cwd.string() << std::endl;
+    }
+    else if (tokens[0] == "cd") {
+	if (!std::filesystem::exists(tokens[1]))
+           std::cout << "cd: " << tokens[1] << ": No such file or directory" << std::endl;
+	else 
+	   std::filesystem::current_path(tokens[1]);
     }
     else {
        while(std::getline(env_p, buf, ':')) {
