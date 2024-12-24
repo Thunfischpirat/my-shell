@@ -35,7 +35,7 @@ int main() {
     }
     else if (tokens[0] == "echo") {
 	buf = "";
-	for (int i { 1 }; i <= tokens.size(); i++) {
+	for (int i { 1 }; i < tokens.size(); i++) {
 	   buf += (tokens[i] + " ");
         }
         std::cout << buf << std::endl;
