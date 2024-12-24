@@ -64,7 +64,7 @@ int main() {
         if (!found)	
            std::cout << tokens[1] << ": not found" << std::endl;
     }   
-    else 
+    else {
        while(std::getline(env_p, buf, ':')) {
 	 if (!std::filesystem::exists(buf)) 
 	   continue;
@@ -78,6 +78,7 @@ int main() {
        }
        if (!found)	
           std::cout << input + ": command not found" << std::endl;
-    }
+     }
+   }
  }
 
