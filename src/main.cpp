@@ -44,7 +44,7 @@ int main() {
                 buf += c;
             else if (c != ' ')  
                 buf += c;
-            else {
+            else if (buf != "") {
                 tokens.push_back(buf);
                 buf = "";
             } 
