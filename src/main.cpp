@@ -30,17 +30,26 @@ int main() {
         std::stringstream ss(input);
         std::vector<std::string> tokens;
         
-        bool quotation{ false };
+        bool single_quotation{ false };
+        bool double_quotation{ false };
         for (const char &c : input) {
-            if (c == '\'' && !quotation) {
-                quotation = true;
+            if (c == '\'' && !single_quotation && !double_quotation) {
+                single_quotation = true;
             }
-            else if (c == '\'' && quotation) {
-                quotation = false;
+            else if (c == '"' && !single_quotation && !double_quotation) {
+                double_quotation = true;
+            }
+            else if (c == '\'' && single_quotation && !double_quotation) {
+                single_quotation = false;
                 tokens.push_back(buf);
                 buf = "";
             }	   
-            else if (quotation) 
+            else if (c == '"' && !single_quotation && double_quotation) {
+                double_quotation = false;
+                tokens.push_back(buf);
+                buf = "";
+            }	 
+            else if (single_quotation || double_quotation) 
                 buf += c;
             else if (c != ' ')  
                 buf += c;
