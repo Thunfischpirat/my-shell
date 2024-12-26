@@ -33,26 +33,42 @@ int main() {
         bool single_quotation{ false };
         bool double_quotation{ false };
         bool literal_next{ false };
+        bool special_literal{ false };
         for (const char &c : input) {
             if (c == '\'' && !single_quotation && !double_quotation) {
                 single_quotation = true;
             }
-            else if (c == '"' && !single_quotation && !double_quotation) {
+            else if (c == '"' && !single_quotation && !double_quotation && !literal_next) {
                 double_quotation = true;
             }
-            else if (c == '\'' && single_quotation && !double_quotation) {
+            else if (c == '\'' && single_quotation && !double_quotation && !special_literal) {
                 single_quotation = false;
-                tokens.push_back(buf);
                 buf = "";
             }	   
-            else if (c == '"' && !single_quotation && double_quotation) {
+            else if (c == '"' && !single_quotation && double_quotation && !special_literal) {
                 double_quotation = false;
-                tokens.push_back(buf);
-                buf = "";
+                buf += "";
+            }   
+            else if (special_literal) {
+                if (c == '$' || c == '`' || c == '\\' || c == '"') {
+                    buf += c;
+                    special_literal = false;
+                }
+                else {
+                    buf += '\\';
+                    buf += c;
+                    special_literal = false;
+                }
             }
-            else if (c == '\\' && !single_quotation && !double_quotation) {
-                buf += "";                
-                literal_next = true;
+            else if (c == '\\' && !single_quotation) {
+                if (!double_quotation) {
+                    buf += "";                
+                    literal_next = true;
+                }
+                else {
+                    buf += "";
+                    special_literal = true;
+                }                  
             }
             else if (single_quotation || double_quotation || literal_next) 
                 buf += c;
