@@ -50,7 +50,7 @@ int main() {
                 buf = "";
             }
             else if (c == '\\' && !single_quotation && !double_quotation)
-                buf += " ";                
+                buf += "";                
             else if (single_quotation || double_quotation) 
                 buf += c;
             else if (c != ' ')  
