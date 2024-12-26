@@ -48,7 +48,9 @@ int main() {
                 double_quotation = false;
                 tokens.push_back(buf);
                 buf = "";
-            }	 
+            }
+            else if (c == '\\' && !single_quotation && !double_quotation)
+                buf += " ";                
             else if (single_quotation || double_quotation) 
                 buf += c;
             else if (c != ' ')  
