@@ -32,6 +32,7 @@ int main() {
         
         bool single_quotation{ false };
         bool double_quotation{ false };
+        bool literal_next{ false };
         for (const char &c : input) {
             if (c == '\'' && !single_quotation && !double_quotation) {
                 single_quotation = true;
@@ -49,9 +50,11 @@ int main() {
                 tokens.push_back(buf);
                 buf = "";
             }
-            else if (c == '\\' && !single_quotation && !double_quotation)
+            else if (c == '\\' && !single_quotation && !double_quotation) {
                 buf += "";                
-            else if (single_quotation || double_quotation) 
+                literal_next = true;
+            }
+            else if (single_quotation || double_quotation || literal_next) 
                 buf += c;
             else if (c != ' ')  
                 buf += c;
