@@ -43,7 +43,7 @@ int main() {
             }
             else if (c == '\'' && single_quotation && !double_quotation && !special_literal) {
                 single_quotation = false;
-                buf = "";
+                buf += "";
             }	   
             else if (c == '"' && !single_quotation && double_quotation && !special_literal) {
                 double_quotation = false;
