@@ -111,10 +111,17 @@ int main() {
             for (size_t i { 1 }; i < tokens.size() - 1; i++) {
                buf += (tokens[i] + " ");
             }
-            if (redirect){
+            if (redirect) {
                 std::ofstream output_file;
                 output_file.open(tokens[2]);
                 output_file << buf << std::endl;
+                output_file.close();               
+            }
+            else if (redirect_err) {
+                std::ofstream output_file;
+                output_file.open(tokens[2]);
+                std::cout << buf << std::endl;
+                output_file << "";
                 output_file.close();               
             }
             else {
@@ -128,11 +135,16 @@ int main() {
                     if (redirect) {
                         std::ofstream output_file;
                         output_file.open(tokens[2]);
-                        output_file << tokens[1] << "is a shell builtin" << std::endl;
+                        output_file << tokens[1] << " is a shell builtin" << std::endl;
                         output_file.close();
-                    }
-                    else
+                    } else if (redirect_err) {
+                        std::ofstream output_file;
+                        output_file.open(tokens[2]);
+                        output_file << ""; 
+                        output_file.close();
+                    } else {
                         std::cout << tokens[1] << " is a shell builtin" << std::endl;
+                    }
                     found = true;
                     break;
                 }
@@ -149,18 +161,24 @@ int main() {
                             output_file.open(tokens[2]);
                             output_file << tokens[1] << " is " << p.path().string() << std::endl;
                             output_file.close();
-                        } else
+                        } else if (redirect_err) {
+                            std::ofstream output_file;
+                            output_file.open(tokens[2]);
+                            output_file << "";
+                            output_file.close();
+                        } else {
                             std::cout << tokens[1] << " is " << p.path().string() << std::endl;
+                        }
                         found = true;
                         break;
                     } 
                 } 
             } 
             if (!found)
-                if (redirect) {
+                if (redirect_err) {
                     std::ofstream output_file;
                     output_file.open(tokens[2]);
-                    output_file << tokens[1] << ": not found" << std::endl;
+                    output_file << tokens[1] << ": not found";
                     output_file.close();
                 } else    
                     std::cout << tokens[1] << ": not found" << std::endl;
@@ -171,6 +189,11 @@ int main() {
                 std::ofstream output_file;
                 output_file.open(tokens[2]);
                 output_file << cwd.string() << std::endl;
+                output_file.close();
+            } else if (redirect_err) {
+                std::ofstream output_file;
+                output_file.open(tokens[2]);
+                output_file << "" << std::endl;
                 output_file.close();
             } else {
                 std::cout << cwd.string() << std::endl;
@@ -185,8 +208,16 @@ int main() {
                 }
                 std::filesystem::current_path(home);
             }
-            else if (!std::filesystem::exists(tokens[1]))
-                std::cerr << "cd: " << tokens[1] << ": No such file or directory" << std::endl;
+            else if (!std::filesystem::exists(tokens[1])) {
+                if (redirect_err) {
+                    std::ofstream output_file;
+                    output_file.open(tokens[2]);
+                    output_file << "cd: " << tokens[1] << ": No such file or directory" << std::endl;
+                    output_file.close();
+                }
+                else
+                    std::cout << "cd: " << tokens[1] << ": No such file or directory" << std::endl;
+            }
             else 
                 std::filesystem::current_path(tokens[1]);
         }
@@ -205,12 +236,13 @@ int main() {
                 }
             }
             if (!found) 
-                if (redirect) {   
+                if (redirect_err) {   
                     std::ofstream output_file;
                     output_file.open(tokens[2]);
                     output_file << input + ": command not found" << std::endl;
                     output_file.close();
-                } else {
+                } 
+                else {
                     std::cout << input + ": command not found" << std::endl;
                 }    
  
