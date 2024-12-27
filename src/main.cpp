@@ -153,7 +153,7 @@ int main() {
                 } 
             } 
             if (!found)
-                if (redirect)    
+                if (!redirect)    
                     std::cout << tokens[1] << ": not found" << std::endl;
                 else {
                     std::ofstream output_file;
@@ -164,7 +164,7 @@ int main() {
         }   
         else if (tokens[0] == "pwd") {
             const std::filesystem::path cwd = std::filesystem::current_path();
-            if (redirect)
+            if (!redirect)
                 std::cout << cwd.string() << std::endl;
             else {
                 std::ofstream output_file;
@@ -202,7 +202,7 @@ int main() {
                 }
             }
             if (!found) 
-                if (redirect)   
+                if (!redirect)   
                     std::cout << input + ": command not found" << std::endl;
                 else {
                     std::ofstream output_file;
