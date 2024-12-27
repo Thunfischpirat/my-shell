@@ -36,6 +36,7 @@ int main() {
         bool literal_next{ false };
         bool special_literal{ false };
         bool redirect{ false };
+        bool redirect_err{ false };
         char prev_char;
         for (const char &c : input) {
             if (c == '\'' && !single_quotation && !double_quotation) {
@@ -47,9 +48,13 @@ int main() {
             else if (!single_quotation && !double_quotation && c == '>') {
                 if (prev_char == ' ')
                     redirect = true;
-                if (prev_char == '1') {
+                else if (prev_char == '1') {
                     buf = "";
                     redirect = true;
+                }
+                else if (prev_char == '2') {
+                    buf = "";
+                    redirect_err = true;
                 }
             }
             else if (c == '\'' && single_quotation && !double_quotation && !special_literal) {
@@ -106,28 +111,28 @@ int main() {
             for (size_t i { 1 }; i < tokens.size() - 1; i++) {
                buf += (tokens[i] + " ");
             }
-            if (!redirect) {
-                buf += tokens.back();
-                std::cout << buf << std::endl;
-            }
-            else {
+            if (redirect){
                 std::ofstream output_file;
                 output_file.open(tokens[2]);
                 output_file << buf << std::endl;
                 output_file.close();               
             }
+            else {
+                buf += tokens.back();
+                std::cout << buf << std::endl;
+            }
         }
         else if (tokens[0] == "type") {
             for (const auto& cmd : cmds) {
                 if (tokens[1] == cmd) {
-                    if (!redirect)
-                        std::cout << tokens[1] << " is a shell builtin" << std::endl;
-                    else {
+                    if (redirect) {
                         std::ofstream output_file;
                         output_file.open(tokens[2]);
                         output_file << tokens[1] << "is a shell builtin" << std::endl;
                         output_file.close();
                     }
+                    else
+                        std::cout << tokens[1] << " is a shell builtin" << std::endl;
                     found = true;
                     break;
                 }
@@ -139,38 +144,36 @@ int main() {
                     continue;    
                 for (const auto& p : std::filesystem::directory_iterator(buf)) {
                     if (p.path().filename() == tokens[1]) {
-                        if (!redirect)
-                            std::cout << tokens[1] << " is " << p.path().string() << std::endl;
-                        else {
+                        if (redirect) {
                             std::ofstream output_file;
                             output_file.open(tokens[2]);
                             output_file << tokens[1] << " is " << p.path().string() << std::endl;
                             output_file.close();
-                        }                      
+                        } else
+                            std::cout << tokens[1] << " is " << p.path().string() << std::endl;
                         found = true;
                         break;
                     } 
                 } 
             } 
             if (!found)
-                if (!redirect)    
-                    std::cout << tokens[1] << ": not found" << std::endl;
-                else {
+                if (redirect) {
                     std::ofstream output_file;
                     output_file.open(tokens[2]);
                     output_file << tokens[1] << ": not found" << std::endl;
                     output_file.close();
-                }      
+                } else    
+                    std::cout << tokens[1] << ": not found" << std::endl;
         }   
         else if (tokens[0] == "pwd") {
             const std::filesystem::path cwd = std::filesystem::current_path();
-            if (!redirect)
-                std::cout << cwd.string() << std::endl;
-            else {
+            if (redirect) {
                 std::ofstream output_file;
                 output_file.open(tokens[2]);
                 output_file << cwd.string() << std::endl;
                 output_file.close();
+            } else {
+                std::cout << cwd.string() << std::endl;
             }    
         }
         else if (tokens[0] == "cd") {
@@ -202,13 +205,13 @@ int main() {
                 }
             }
             if (!found) 
-                if (!redirect)   
-                    std::cout << input + ": command not found" << std::endl;
-                else {
+                if (redirect) {   
                     std::ofstream output_file;
                     output_file.open(tokens[2]);
                     output_file << input + ": command not found" << std::endl;
                     output_file.close();
+                } else {
+                    std::cout << input + ": command not found" << std::endl;
                 }    
  
         }
