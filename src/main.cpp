@@ -37,6 +37,8 @@ int main() {
         bool special_literal{ false };
         bool redirect{ false };
         bool redirect_err{ false };
+        bool append_std{ false };
+        bool append_err{ false };
         char prev_char;
         for (const char &c : input) {
             if (c == '\'' && !single_quotation && !double_quotation) {
@@ -55,6 +57,12 @@ int main() {
                 else if (prev_char == '2') {
                     buf = "";
                     redirect_err = true;
+                }
+                else if (prev_char == '>') {
+                    if (redirect)
+                        append_std = true;
+                    else if (redirect_err)
+                        append_err = true;
                 }
             }
             else if (c == '\'' && single_quotation && !double_quotation && !special_literal) {
@@ -113,13 +121,15 @@ int main() {
             }
             if (redirect) {
                 std::ofstream output_file;
-                output_file.open(tokens[2]);
+                std::ios::openmode mode = append_std ? std::ios::app : std::ios::out; 
+                output_file.open(tokens[2], mode); 
                 output_file << buf << std::endl;
                 output_file.close();               
             }
             else if (redirect_err) {
                 std::ofstream output_file;
-                output_file.open(tokens[2]);
+                std::ios::openmode mode = append_err ? std::ios::app : std::ios::out; 
+                output_file.open(tokens[2], mode);
                 std::cout << buf << std::endl;
                 output_file << "";
                 output_file.close();               
@@ -134,12 +144,14 @@ int main() {
                 if (tokens[1] == cmd) {
                     if (redirect) {
                         std::ofstream output_file;
-                        output_file.open(tokens[2]);
+                        std::ios::openmode mode = append_std ? std::ios::app : std::ios::out; 
+                        output_file.open(tokens[2], mode);
                         output_file << tokens[1] << " is a shell builtin" << std::endl;
                         output_file.close();
                     } else if (redirect_err) {
                         std::ofstream output_file;
-                        output_file.open(tokens[2]);
+                        std::ios::openmode mode = append_err ? std::ios::app : std::ios::out; 
+                        output_file.open(tokens[2], mode);
                         output_file << ""; 
                         output_file.close();
                     } else {
@@ -158,12 +170,14 @@ int main() {
                     if (p.path().filename() == tokens[1]) {
                         if (redirect) {
                             std::ofstream output_file;
-                            output_file.open(tokens[2]);
+                            std::ios::openmode mode = append_std ? std::ios::app : std::ios::out; 
+                            output_file.open(tokens[2], mode);
                             output_file << tokens[1] << " is " << p.path().string() << std::endl;
                             output_file.close();
                         } else if (redirect_err) {
                             std::ofstream output_file;
-                            output_file.open(tokens[2]);
+                            std::ios::openmode mode = append_err ? std::ios::app : std::ios::out; 
+                            output_file.open(tokens[2], mode);
                             output_file << "";
                             output_file.close();
                         } else {
@@ -177,7 +191,8 @@ int main() {
             if (!found)
                 if (redirect_err) {
                     std::ofstream output_file;
-                    output_file.open(tokens[2]);
+                    std::ios::openmode mode = append_err ? std::ios::app : std::ios::out; 
+                    output_file.open(tokens[2], mode);
                     output_file << tokens[1] << ": not found";
                     output_file.close();
                 } else    
@@ -187,12 +202,14 @@ int main() {
             const std::filesystem::path cwd = std::filesystem::current_path();
             if (redirect) {
                 std::ofstream output_file;
-                output_file.open(tokens[2]);
+                std::ios::openmode mode = append_std ? std::ios::app : std::ios::out; 
+                output_file.open(tokens[2], mode);
                 output_file << cwd.string() << std::endl;
                 output_file.close();
             } else if (redirect_err) {
                 std::ofstream output_file;
-                output_file.open(tokens[2]);
+                std::ios::openmode mode = append_err ? std::ios::app : std::ios::out; 
+                output_file.open(tokens[2], mode);
                 output_file << "" << std::endl;
                 output_file.close();
             } else {
@@ -211,7 +228,8 @@ int main() {
             else if (!std::filesystem::exists(tokens[1])) {
                 if (redirect_err) {
                     std::ofstream output_file;
-                    output_file.open(tokens[2]);
+                    std::ios::openmode mode = append_err ? std::ios::app : std::ios::out; 
+                    output_file.open(tokens[2], mode);
                     output_file << "cd: " << tokens[1] << ": No such file or directory" << std::endl;
                     output_file.close();
                 }
@@ -238,7 +256,8 @@ int main() {
             if (!found) 
                 if (redirect_err) {   
                     std::ofstream output_file;
-                    output_file.open(tokens[2]);
+                    std::ios::openmode mode = append_err ? std::ios::app : std::ios::out; 
+                    output_file.open(tokens[2], mode);
                     output_file << input + ": command not found" << std::endl;
                     output_file.close();
                 } 
