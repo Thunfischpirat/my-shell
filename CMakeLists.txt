@@ -46,3 +46,5 @@ target_link_libraries(tokenizer_test
 # Add the test to CTest
 add_test(NAME tokenizer_test COMMAND tokenizer_test)
 
+message(STATUS "C++ standard: ${CMAKE_CXX_STANDARD}")
+
